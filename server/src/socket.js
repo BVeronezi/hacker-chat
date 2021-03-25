@@ -1,12 +1,17 @@
 import http from 'http';
 import { v4 } from 'uuid';
-import { constants } from './constants.js'
+import { constants } from './constants.js';
 
 export default class SockeServer {
   constructor({ port }) {
     this.port = port;
   }
 
+  async sendMessage(socket, event, message) {
+    const data = JSON.stringify({ event, message });
+    socket.write(`${data}\n`);
+  }
+  
   async initialize(eventEmitter) {
     const server = http.createServer((req, res) => {
       res.writeHead(200, { 'Content-Type': 'text/plain' });
